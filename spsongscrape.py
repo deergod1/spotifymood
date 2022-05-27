@@ -12,8 +12,8 @@ final = []
 #map site
 
 url = "https://spotifycharts.com/regional/us/daily/"
-start_date= date(2019, 9, 1)
-end_date= date(2020, 9, 1)
+start_date= date(2022, 5, 1) # Updated timeframe to more recent dates
+end_date= date(2022, 5, 5) # Reduced timedelta to 5 days for testing
 
 delta= end_date-start_date
 
@@ -49,7 +49,7 @@ def song_scrape(x):
 #loop through urls to create array of all of our song info
 
 for u in url_list:
-    read_pg= requests.get(u)
+    read_pg= requests.get(u, headers={'User-Agent': 'Mozilla/5.0'})
     sleep(2)
     soup= BeautifulSoup(read_pg.text, "html.parser")
     songs= soup.find("table", {"class":"chart-table"})
@@ -62,4 +62,4 @@ final_df = pd.DataFrame(final, columns= ["Title", "Artist", "Song ID", "Chart Da
 #write to csv
 
 with open('spmooddata.csv', 'w') as f:
-        final_df.to_csv(f, header= True, index=False)
+        final_df.to_csv(f, header= True, index=False, line_terminator='\n') # fixed blank lines
